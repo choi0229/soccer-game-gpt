@@ -1,0 +1,71 @@
+[
+  {
+    "id": "shooting",
+    "label": "슈팅",
+    "stats": [
+      "finishing",
+      "composure"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "power",
+    "label": "파워",
+    "stats": [
+      "shotPower",
+      "kickPower"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "aerial",
+    "label": "제공권",
+    "stats": [
+      "heading",
+      "offBall"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "breakthrough",
+    "label": "돌파",
+    "stats": [
+      "dribbling",
+      "speed"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "link",
+    "label": "연계",
+    "stats": [
+      "passing",
+      "firstTouch"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "press",
+    "label": "압박",
+    "stats": [
+      "workRate",
+      "teamwork"
+    ],
+    "growthMultiplier": 1,
+    "unlock": {}
+  },
+  {
+    "id": "fitness",
+    "label": "체력",
+    "stats": [
+      "fitness"
+    ],
+    "growthMultiplier": 2,
+    "unlock": {}
+  }
+]

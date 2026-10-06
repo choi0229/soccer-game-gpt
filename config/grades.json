@@ -1,0 +1,34 @@
+[
+  {
+    "label": "S",
+    "min": 90
+  },
+  {
+    "label": "A",
+    "min": 80
+  },
+  {
+    "label": "B",
+    "min": 70
+  },
+  {
+    "label": "C",
+    "min": 60
+  },
+  {
+    "label": "D",
+    "min": 50
+  },
+  {
+    "label": "E",
+    "min": 40
+  },
+  {
+    "label": "F",
+    "min": 30
+  },
+  {
+    "label": "G",
+    "min": 0
+  }
+]

@@ -1,0 +1,258 @@
+[
+  {
+    "id": "s01",
+    "name": "가온고",
+    "region": 0,
+    "type": "pro",
+    "typeLabel": "프로 산하",
+    "power": 80
+  },
+  {
+    "id": "s02",
+    "name": "누리고",
+    "region": 0,
+    "type": "elite",
+    "typeLabel": "명문",
+    "power": 70
+  },
+  {
+    "id": "s03",
+    "name": "다온고",
+    "region": 0,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s04",
+    "name": "라온고",
+    "region": 0,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s05",
+    "name": "마루고",
+    "region": 0,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s06",
+    "name": "바른고",
+    "region": 0,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s07",
+    "name": "새온고",
+    "region": 0,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s08",
+    "name": "아람고",
+    "region": 0,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s09",
+    "name": "여울고",
+    "region": 1,
+    "type": "pro",
+    "typeLabel": "프로 산하",
+    "power": 80
+  },
+  {
+    "id": "s10",
+    "name": "온빛고",
+    "region": 1,
+    "type": "elite",
+    "typeLabel": "명문",
+    "power": 70
+  },
+  {
+    "id": "s11",
+    "name": "이든고",
+    "region": 1,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s12",
+    "name": "찬솔고",
+    "region": 1,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s13",
+    "name": "하람고",
+    "region": 1,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s14",
+    "name": "해온고",
+    "region": 1,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s15",
+    "name": "푸른샘고",
+    "region": 1,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s16",
+    "name": "한울고",
+    "region": 1,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s17",
+    "name": "가람고",
+    "region": 2,
+    "type": "pro",
+    "typeLabel": "프로 산하",
+    "power": 80
+  },
+  {
+    "id": "s18",
+    "name": "나린고",
+    "region": 2,
+    "type": "elite",
+    "typeLabel": "명문",
+    "power": 70
+  },
+  {
+    "id": "s19",
+    "name": "도담고",
+    "region": 2,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s20",
+    "name": "루미고",
+    "region": 2,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s21",
+    "name": "모은고",
+    "region": 2,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s22",
+    "name": "보람고",
+    "region": 2,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s23",
+    "name": "서온고",
+    "region": 2,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s24",
+    "name": "솔담고",
+    "region": 2,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s25",
+    "name": "아온고",
+    "region": 3,
+    "type": "pro",
+    "typeLabel": "프로 산하",
+    "power": 80
+  },
+  {
+    "id": "s26",
+    "name": "온유고",
+    "region": 3,
+    "type": "elite",
+    "typeLabel": "명문",
+    "power": 70
+  },
+  {
+    "id": "s27",
+    "name": "자온고",
+    "region": 3,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s28",
+    "name": "초담고",
+    "region": 3,
+    "type": "strong",
+    "typeLabel": "강호",
+    "power": 60
+  },
+  {
+    "id": "s29",
+    "name": "큰솔고",
+    "region": 3,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s30",
+    "name": "하온고",
+    "region": 3,
+    "type": "rising",
+    "typeLabel": "도약",
+    "power": 50
+  },
+  {
+    "id": "s31",
+    "name": "해담고",
+    "region": 3,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  },
+  {
+    "id": "s32",
+    "name": "휘온고",
+    "region": 3,
+    "type": "darkhorse",
+    "typeLabel": "다크호스",
+    "power": 40
+  }
+]

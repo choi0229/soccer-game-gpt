@@ -1,0 +1,110 @@
+[
+  {
+    "id": "finishing",
+    "label": "결정력",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "shotPower",
+    "label": "슈팅 파워",
+    "trainable": true,
+    "primary": true
+  },
+  {
+    "id": "composure",
+    "label": "침착성",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "offBall",
+    "label": "오프더볼",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "heading",
+    "label": "헤더",
+    "trainable": true,
+    "primary": true
+  },
+  {
+    "id": "speed",
+    "label": "스피드",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "firstTouch",
+    "label": "퍼스트 터치",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "workRate",
+    "label": "활동량",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "dribbling",
+    "label": "드리블",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "passing",
+    "label": "패스 정확도",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "kickPower",
+    "label": "킥력",
+    "trainable": true,
+    "primary": true
+  },
+  {
+    "id": "teamwork",
+    "label": "팀워크",
+    "trainable": true,
+    "primary": false
+  },
+  {
+    "id": "momentum",
+    "label": "기세",
+    "trainable": false,
+    "primary": false
+  },
+  {
+    "id": "fighterResponse",
+    "label": "파이터형 대응",
+    "trainable": false,
+    "primary": false
+  },
+  {
+    "id": "commanderResponse",
+    "label": "커맨더형 대응",
+    "trainable": false,
+    "primary": false
+  },
+  {
+    "id": "clutch",
+    "label": "클러치",
+    "trainable": false,
+    "primary": false
+  },
+  {
+    "id": "mental",
+    "label": "멘탈",
+    "trainable": false,
+    "primary": false
+  },
+  {
+    "id": "fitness",
+    "label": "기초체력",
+    "trainable": false,
+    "primary": false
+  }
+]

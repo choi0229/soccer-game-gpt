@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: soccer
+      POSTGRES_USER: soccer
+      POSTGRES_PASSWORD: soccer
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U soccer -d soccer"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  server:
+    build:
+      context: .
+      target: server
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/soccer
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD-SHELL, "bash -c 'echo > /dev/tcp/localhost/8080'"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+  web:
+    build: ./frontend
+    ports:
+      - "${WEB_PORT:-5187}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+  simulator:
+    profiles: [tools]
+    build:
+      context: .
+      target: simulator
+    volumes:
+      - ./reports:/app/reports
+volumes:
+  postgres-data:

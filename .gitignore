@@ -1,0 +1,10 @@
+**/target/
+frontend/node_modules/
+frontend/dist/
+.tools/
+*.log
+.env
+frontend/test-results/
+frontend/playwright-report/
+frontend/*.tsbuildinfo
+reports/pre-events/

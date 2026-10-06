@@ -1,0 +1,914 @@
+[
+  {
+    "id": "coach_001",
+    "axis": "coach",
+    "title": "첫 인사",
+    "body": "훈련이 끝난 뒤 감독이 새로 들어온 1학년들을 불렀다. 짧게라도 네 생각을 말할 기회다.",
+    "trigger": {
+      "minWeek": 1
+    },
+    "choices": [
+      {
+        "text": "목표를 또렷하게 말한다",
+        "effects": {
+          "coachAffinity": 4,
+          "stat": {
+            "mental": 0.5
+          }
+        }
+      },
+      {
+        "text": "기본기부터 배우겠다고 말한다",
+        "effects": {
+          "coachAffinity": 2,
+          "stat": {
+            "firstTouch": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [
+      "introduced"
+    ],
+    "once": true
+  },
+  {
+    "id": "coach_002",
+    "axis": "coach",
+    "title": "슈팅의 무게",
+    "body": "감독이 네 중거리 슈팅을 보고 발목에 힘을 끝까지 실어 보라고 한다. 남은 시간을 어떻게 쓸까?",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "감독과 슈팅 자세를 복습한다",
+        "effects": {
+          "coachAffinity": 3,
+          "stat": {
+            "shotPower": 1
+          },
+          "stamina": -10
+        }
+      },
+      {
+        "text": "오늘은 몸을 풀고 내일 다시 해 본다",
+        "effects": {
+          "stamina": 10,
+          "stat": {
+            "composure": 0.5
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "coach_003",
+    "axis": "coach",
+    "title": "훈련 일지 검사",
+    "body": "감독이 이번 주 훈련 일지를 가져오라고 한다. 공책에는 메뉴와 느낀 점이 듬성듬성 적혀 있다.",
+    "trigger": {
+      "minWeek": 3
+    },
+    "choices": [
+      {
+        "text": "놓친 부분까지 정리한다",
+        "effects": {
+          "coachAffinity": 4,
+          "academic": 2,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "동료와 기억을 맞춰 본다",
+        "effects": {
+          "teammateAffinity": 3,
+          "coachAffinity": 2
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "coach_004",
+    "axis": "coach",
+    "title": "벤치 통보",
+    "body": "감독이 이번 경기에서는 벤치에서 시작하라고 한다. 전술판 옆에서 잠깐 대화할 시간이 생겼다.",
+    "trigger": {
+      "minWeek": 8,
+      "lastMatchRole": "bench",
+      "coachAffinityMax": 40
+    },
+    "choices": [
+      {
+        "text": "출전하려면 무엇을 고쳐야 하는지 묻는다",
+        "effects": {
+          "coachAffinity": 4,
+          "condition": -1
+        }
+      },
+      {
+        "text": "말없이 개인 훈련을 더 한다",
+        "effects": {
+          "stat": {
+            "shotPower": 1.5
+          },
+          "stamina": -15
+        }
+      }
+    ],
+    "setFlags": [
+      "benched_once"
+    ],
+    "once": true
+  },
+  {
+    "id": "coach_005",
+    "axis": "coach",
+    "title": "재활 중의 조급함",
+    "body": "감독이 재활 중인 네게 지금은 몸을 돌보는 것도 훈련이라고 말한다. 운동장 소리가 유난히 크게 들린다.",
+    "trigger": {
+      "injured": true
+    },
+    "choices": [
+      {
+        "text": "재활 일정에 집중하겠다고 답한다",
+        "effects": {
+          "coachAffinity": 4,
+          "stamina": 15
+        }
+      },
+      {
+        "text": "경기 영상을 함께 살펴본다",
+        "effects": {
+          "coachAffinity": 2,
+          "stat": {
+            "offBall": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "coach_006",
+    "axis": "coach",
+    "title": "주장의 전달 사항",
+    "body": "감독이 1학년의 의견도 듣고 싶다며 훈련에 어려운 점이 있는지 묻는다.",
+    "trigger": {
+      "minWeek": 12
+    },
+    "choices": [
+      {
+        "text": "동료들이 말한 불편을 정리해서 전한다",
+        "effects": {
+          "coachAffinity": 3,
+          "teammateAffinity": 3
+        }
+      },
+      {
+        "text": "개인 목표에 맞는 조언을 구한다",
+        "effects": {
+          "coachAffinity": 2,
+          "stat": {
+            "kickPower": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "coach_007",
+    "axis": "coach",
+    "title": "교실도 경기장이다",
+    "body": "감독이 담임에게 수업 이야기를 들었다며 책상 앞에서의 태도도 중요하다고 당부한다.",
+    "trigger": {
+      "academicMax": 45
+    },
+    "choices": [
+      {
+        "text": "주말에 밀린 과제를 한다",
+        "effects": {
+          "academic": 5,
+          "coachAffinity": 3,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "친구에게 공부 방법을 묻는다",
+        "effects": {
+          "schoolAffinity": 4,
+          "academic": 3
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "coach_008",
+    "axis": "coach",
+    "title": "한 학기를 돌아보며",
+    "body": "감독이 훈련 뒤 잠시 남으라고 한다. 지난 시간 중 가장 잘한 선택이 무엇인지 묻는다.",
+    "trigger": {
+      "minWeek": 20
+    },
+    "choices": [
+      {
+        "text": "꾸준히 기본기를 익힌 일을 말한다",
+        "effects": {
+          "coachAffinity": 5,
+          "stat": {
+            "mental": 1
+          }
+        }
+      },
+      {
+        "text": "팀원들과 가까워진 일을 말한다",
+        "effects": {
+          "coachAffinity": 2,
+          "teammateAffinity": 4
+        }
+      },
+      {
+        "text": "다음 목표를 훈련 일지에 쓴다",
+        "effects": {
+          "stat": {
+            "composure": 1.5
+          },
+          "academic": 1
+        }
+      }
+    ],
+    "setFlags": [
+      "semester_reflected"
+    ],
+    "once": true
+  },
+  {
+    "id": "teammate_001",
+    "axis": "teammate",
+    "title": "공 주워 주는 사이",
+    "body": "같은 학년 동료가 슈팅 연습을 같이 하자고 한다. 한 명이 차면 다른 한 명이 공을 모으기로 했다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "번갈아 차며 끝까지 함께한다",
+        "effects": {
+          "teammateAffinity": 4,
+          "stat": {
+            "teamwork": 1
+          },
+          "stamina": -10
+        }
+      },
+      {
+        "text": "짧게 연습하고 함께 정리한다",
+        "effects": {
+          "teammateAffinity": 2,
+          "stamina": 5
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_002",
+    "axis": "teammate",
+    "title": "늦은 저녁의 패스",
+    "body": "저녁 식사 후 동료가 운동장 옆에서 짧은 패스를 주고받자고 한다. 오늘 있었던 이야기도 함께 오간다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "양발로 천천히 주고받는다",
+        "effects": {
+          "teammateAffinity": 3,
+          "stat": {
+            "passing": 1
+          },
+          "stamina": -5
+        }
+      },
+      {
+        "text": "앉아서 이야기만 나눈다",
+        "effects": {
+          "teammateAffinity": 4,
+          "stamina": 10
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_003",
+    "axis": "teammate",
+    "title": "선배의 헤더 팁",
+    "body": "선배가 크로스가 올라올 때 먼저 수비수의 어깨를 보라고 알려 준다. 직접 움직여 볼 기회다.",
+    "trigger": {
+      "minWeek": 2
+    },
+    "choices": [
+      {
+        "text": "선배에게 크로스를 부탁한다",
+        "effects": {
+          "teammateAffinity": 3,
+          "stat": {
+            "heading": 1.5
+          },
+          "stamina": -10
+        }
+      },
+      {
+        "text": "움직임을 메모해 둔다",
+        "effects": {
+          "stat": {
+            "offBall": 1
+          },
+          "academic": 1
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_004",
+    "axis": "teammate",
+    "title": "라커룸의 작은 오해",
+    "body": "동료가 네가 쓰고 놓은 물통을 자기 것인 줄 알고 가져갔다. 서로 말이 엇갈리면서 분위기가 굳었다.",
+    "trigger": {
+      "minWeek": 5
+    },
+    "choices": [
+      {
+        "text": "차분히 설명하고 같이 찾는다",
+        "effects": {
+          "teammateAffinity": 4,
+          "stat": {
+            "mental": 0.5
+          }
+        }
+      },
+      {
+        "text": "먼저 웃으며 다음엔 표시하자고 한다",
+        "effects": {
+          "teammateAffinity": 3,
+          "condition": 1
+        }
+      },
+      {
+        "text": "오늘은 거리를 둔다",
+        "effects": {
+          "teammateAffinity": -2,
+          "stamina": 5
+        }
+      }
+    ],
+    "setFlags": [
+      "locker_resolved"
+    ],
+    "once": true
+  },
+  {
+    "id": "teammate_005",
+    "axis": "teammate",
+    "title": "수업 필기 빌리기",
+    "body": "경기 때문에 놓친 수업의 필기를 동료가 보여 준다. 책상 위에 두 사람의 공책이 나란히 놓였다.",
+    "trigger": {
+      "minWeek": 3
+    },
+    "choices": [
+      {
+        "text": "같이 문제를 풀며 고마움을 전한다",
+        "effects": {
+          "teammateAffinity": 3,
+          "academic": 4
+        }
+      },
+      {
+        "text": "필기를 정리해 다른 동료에게도 나눈다",
+        "effects": {
+          "teammateAffinity": 5,
+          "academic": 2,
+          "stamina": -5
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_006",
+    "axis": "teammate",
+    "title": "압박의 약속",
+    "body": "동료가 네가 먼저 압박하면 자신이 뒤를 막겠다고 한다. 서로 움직이는 타이밍을 맞춰 보자고 한다.",
+    "trigger": {
+      "minWeek": 6
+    },
+    "choices": [
+      {
+        "text": "짧게 신호를 정해 연습한다",
+        "effects": {
+          "teammateAffinity": 3,
+          "stat": {
+            "workRate": 1,
+            "teamwork": 0.5
+          },
+          "stamina": -10
+        }
+      },
+      {
+        "text": "지난 경기의 장면을 함께 복기한다",
+        "effects": {
+          "teammateAffinity": 2,
+          "stat": {
+            "teamwork": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_007",
+    "axis": "teammate",
+    "title": "버스 뒷자리",
+    "body": "경기를 마치고 돌아오는 버스에서 동료가 오늘 실수한 장면이 계속 생각난다고 말한다.",
+    "trigger": {
+      "minWeek": 4
+    },
+    "choices": [
+      {
+        "text": "네 실수도 이야기하며 다독인다",
+        "effects": {
+          "teammateAffinity": 5,
+          "stat": {
+            "mental": 1
+          }
+        }
+      },
+      {
+        "text": "다음에 쓸 패스 약속을 만든다",
+        "effects": {
+          "teammateAffinity": 3,
+          "stat": {
+            "passing": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "teammate_008",
+    "axis": "teammate",
+    "title": "겨울에도 함께",
+    "body": "겨울 훈련을 앞두고 동료들이 서로의 올해 목표를 공책에 써 주기로 했다. 네 차례가 돌아왔다.",
+    "trigger": {
+      "minWeek": 41
+    },
+    "choices": [
+      {
+        "text": "함께 뛰어서 좋았다고 적는다",
+        "effects": {
+          "teammateAffinity": 6,
+          "stat": {
+            "teamwork": 1
+          }
+        }
+      },
+      {
+        "text": "다음 시즌에 맞출 움직임을 적는다",
+        "effects": {
+          "teammateAffinity": 3,
+          "stat": {
+            "offBall": 1.5
+          }
+        }
+      }
+    ],
+    "setFlags": [
+      "winter_promise"
+    ],
+    "once": true
+  },
+  {
+    "id": "family_001",
+    "axis": "family",
+    "title": "집에서 온 전화",
+    "body": "저녁에 가족에게서 전화가 왔다. 밥은 잘 먹는지, 학교생활은 어떤지 익숙한 질문이 이어진다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "오늘 있었던 일을 천천히 이야기한다",
+        "effects": {
+          "familyAffinity": 4,
+          "condition": 1
+        }
+      },
+      {
+        "text": "걱정하지 않도록 짧게 안부를 전한다",
+        "effects": {
+          "familyAffinity": 2,
+          "stamina": 10
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "family_002",
+    "axis": "family",
+    "title": "도시락 옆의 쪽지",
+    "body": "집에 들렀다가 돌아가는 길, 도시락 가방에서 작은 응원 쪽지를 발견했다.",
+    "trigger": {
+      "minWeek": 4
+    },
+    "choices": [
+      {
+        "text": "고맙다고 연락하고 푹 쉰다",
+        "effects": {
+          "familyAffinity": 5,
+          "stamina": 15
+        }
+      },
+      {
+        "text": "응원을 훈련 일지에 붙여 둔다",
+        "effects": {
+          "familyAffinity": 3,
+          "stat": {
+            "mental": 1
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "family_003",
+    "axis": "family",
+    "title": "성적표를 꺼내는 날",
+    "body": "가족과 저녁을 먹다가 성적 이야기가 나왔다. 운동과 공부를 어떻게 함께 할지 말할 수 있는 자리다.",
+    "trigger": {
+      "minWeek": 15
+    },
+    "choices": [
+      {
+        "text": "부족한 과목의 공부 계획을 세운다",
+        "effects": {
+          "familyAffinity": 4,
+          "academic": 5,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "학교에서 도움을 받고 있다고 이야기한다",
+        "effects": {
+          "familyAffinity": 3,
+          "schoolAffinity": 2,
+          "academic": 2
+        }
+      }
+    ],
+    "setFlags": [
+      "family_study_plan"
+    ],
+    "once": true
+  },
+  {
+    "id": "family_004",
+    "axis": "family",
+    "title": "쉬어 가도 괜찮아",
+    "body": "집에 돌아온 네 얼굴을 본 가족이 오늘은 축구 이야기를 잠깐 내려놓자고 한다.",
+    "trigger": {
+      "staminaMax": 70
+    },
+    "choices": [
+      {
+        "text": "함께 식사하고 일찍 잠든다",
+        "effects": {
+          "familyAffinity": 4,
+          "stamina": 20
+        }
+      },
+      {
+        "text": "동네를 천천히 걸으며 이야기한다",
+        "effects": {
+          "familyAffinity": 5,
+          "stamina": 10,
+          "condition": 1
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "family_005",
+    "axis": "family",
+    "title": "첫해의 사진",
+    "body": "가족이 입부하던 날 찍은 사진을 꺼냈다. 몇 달 전보다 단단해진 네 모습이 눈에 들어온다.",
+    "trigger": {
+      "minWeek": 35
+    },
+    "choices": [
+      {
+        "text": "함께 사진을 보며 시간을 보낸다",
+        "effects": {
+          "familyAffinity": 6,
+          "stat": {
+            "mental": 1
+          }
+        }
+      },
+      {
+        "text": "올해 목표를 다시 말해 본다",
+        "effects": {
+          "familyAffinity": 4,
+          "stat": {
+            "clutch": 1.5
+          }
+        }
+      }
+    ],
+    "setFlags": [
+      "first_year_photo"
+    ],
+    "once": true
+  },
+  {
+    "id": "school_001",
+    "axis": "school",
+    "title": "칠판 앞의 발표",
+    "body": "수업 중 짧은 발표를 맡게 됐다. 친구들이 운동부에서 겪은 일을 예로 들어도 좋다고 한다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "훈련 일지를 예로 들어 발표한다",
+        "effects": {
+          "schoolAffinity": 4,
+          "academic": 3,
+          "stat": {
+            "mental": 0.5
+          }
+        }
+      },
+      {
+        "text": "친구와 역할을 나누어 준비한다",
+        "effects": {
+          "schoolAffinity": 5,
+          "academic": 2
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "school_002",
+    "axis": "school",
+    "title": "밀린 과제",
+    "body": "가방 밑에서 제출 기한이 다가오는 과제물을 발견했다. 점심시간을 어떻게 쓸지 정해야 한다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "도서관에서 끝까지 작성한다",
+        "effects": {
+          "academic": 5,
+          "stamina": -10
+        }
+      },
+      {
+        "text": "친구에게 풀이를 물어보고 직접 정리한다",
+        "effects": {
+          "schoolAffinity": 3,
+          "academic": 3
+        }
+      },
+      {
+        "text": "쉬고 다음 쉬는 시간에 조금씩 한다",
+        "effects": {
+          "stamina": 5,
+          "academic": 1
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "school_003",
+    "axis": "school",
+    "title": "담임의 응원",
+    "body": "담임이 운동과 공부를 병행하는 일이 쉽지 않을 것이라고 말하며 필요한 도움을 묻는다.",
+    "trigger": {
+      "minWeek": 2
+    },
+    "choices": [
+      {
+        "text": "어려운 과목을 솔직하게 말한다",
+        "effects": {
+          "schoolAffinity": 5,
+          "academic": 4
+        }
+      },
+      {
+        "text": "수업에 집중하겠다고 약속한다",
+        "effects": {
+          "schoolAffinity": 3,
+          "academic": 2,
+          "stat": {
+            "composure": 0.5
+          }
+        }
+      }
+    ],
+    "setFlags": [
+      "teacher_support"
+    ],
+    "once": true
+  },
+  {
+    "id": "school_004",
+    "axis": "school",
+    "title": "교실 청소 당번",
+    "body": "친구가 네 경기 일정과 청소 당번이 겹친 것을 보고 시간을 바꿔 주겠다고 한다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "오늘 먼저 청소하고 고맙다고 한다",
+        "effects": {
+          "schoolAffinity": 4,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "친구와 나눠서 빠르게 끝낸다",
+        "effects": {
+          "schoolAffinity": 3,
+          "stat": {
+            "teamwork": 0.5
+          }
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "school_005",
+    "axis": "school",
+    "title": "점심시간의 축구 이야기",
+    "body": "같은 반 친구들이 다음 경기 상대는 어떤 팀인지 묻는다. 전술을 설명하자 친구들이 귀를 기울인다.",
+    "trigger": {
+      "minWeek": 3
+    },
+    "choices": [
+      {
+        "text": "공간을 찾는 움직임을 쉽게 설명한다",
+        "effects": {
+          "schoolAffinity": 4,
+          "stat": {
+            "offBall": 1
+          }
+        }
+      },
+      {
+        "text": "같이 응원 구호를 생각한다",
+        "effects": {
+          "schoolAffinity": 5,
+          "condition": 1
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "school_006",
+    "axis": "school",
+    "title": "시험 전 공부 모임",
+    "body": "친구들이 시험 전에 함께 복습하자고 한다. 문제집 옆에 훈련 일정표를 펴 놓고 시간을 맞춘다.",
+    "trigger": {
+      "minWeek": 14
+    },
+    "choices": [
+      {
+        "text": "부족한 부분을 같이 복습한다",
+        "effects": {
+          "schoolAffinity": 4,
+          "academic": 5,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "아는 부분을 친구에게 설명한다",
+        "effects": {
+          "schoolAffinity": 5,
+          "academic": 3
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "common_001",
+    "axis": "common",
+    "title": "운동장 정리",
+    "body": "훈련이 끝난 운동장에 공 몇 개와 이동식 표지판이 남아 있다. 누군가 정리해야 할 시간이다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "동료와 함께 정리한다",
+        "effects": {
+          "coachAffinity": 2,
+          "teammateAffinity": 2,
+          "stamina": -5
+        }
+      },
+      {
+        "text": "혼자 정리하며 오늘을 돌아본다",
+        "effects": {
+          "coachAffinity": 3,
+          "stat": {
+            "mental": 0.5
+          },
+          "stamina": -5
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "common_002",
+    "axis": "common",
+    "title": "비 오는 오후",
+    "body": "창문을 두드리는 빗소리를 들으며 이번 주를 돌아본다. 잠깐 스스로를 돌볼 시간이 생겼다.",
+    "trigger": {},
+    "choices": [
+      {
+        "text": "스트레칭하고 충분히 쉰다",
+        "effects": {
+          "stamina": 15,
+          "condition": 1
+        }
+      },
+      {
+        "text": "경기에서 놓친 움직임을 메모한다",
+        "effects": {
+          "stat": {
+            "offBall": 1,
+            "composure": 0.5
+          },
+          "academic": 1
+        }
+      }
+    ],
+    "setFlags": [],
+    "once": false
+  },
+  {
+    "id": "common_003",
+    "axis": "common",
+    "title": "첫해의 마지막 공책",
+    "body": "일 년 동안 쓴 훈련 공책의 끝이 보인다. 첫 장의 서툰 글씨와 마지막 장을 나란히 펼쳐 본다.",
+    "trigger": {
+      "minWeek": 45
+    },
+    "choices": [
+      {
+        "text": "계속 지키고 싶은 습관을 적는다",
+        "effects": {
+          "stat": {
+            "mental": 1.5
+          },
+          "academic": 2
+        }
+      },
+      {
+        "text": "함께한 사람들에게 고마움을 전한다",
+        "effects": {
+          "coachAffinity": 3,
+          "teammateAffinity": 3,
+          "familyAffinity": 3
+        }
+      }
+    ],
+    "setFlags": [
+      "year_review"
+    ],
+    "once": true
+  }
+]

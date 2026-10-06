@@ -1,0 +1,27 @@
+[
+  {
+    "label": "매우 나쁨",
+    "training": 0.9,
+    "match": -10
+  },
+  {
+    "label": "나쁨",
+    "training": 0.95,
+    "match": -5
+  },
+  {
+    "label": "보통",
+    "training": 1,
+    "match": 0
+  },
+  {
+    "label": "좋음",
+    "training": 1.05,
+    "match": 5
+  },
+  {
+    "label": "매우 좋음",
+    "training": 1.1,
+    "match": 10
+  }
+]

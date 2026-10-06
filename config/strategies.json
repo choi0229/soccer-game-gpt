@@ -1,0 +1,46 @@
+{
+  "trainingStaminaThreshold": 50,
+  "trainingAcademicThreshold": 40,
+  "trainingMenus": [
+    "power",
+    "aerial"
+  ],
+  "balancedExerciseDays": [
+    0,
+    2,
+    4
+  ],
+  "balancedClasses": [
+    "focus",
+    "nap",
+    "teacher",
+    "friends"
+  ],
+  "balancedSunday": [
+    "rest",
+    "coach",
+    "teammate",
+    "family"
+  ],
+  "randomDawn": [
+    "exercise",
+    "sleep"
+  ],
+  "randomClasses": [
+    "focus",
+    "nap",
+    "teacher",
+    "friends"
+  ],
+  "randomSunday": [
+    "rest",
+    "job",
+    "meet"
+  ],
+  "meetAxes": [
+    "coach",
+    "teammate",
+    "family"
+  ],
+  "choiceStreamSalt": "-3335678366873096957"
+}

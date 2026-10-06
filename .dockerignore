@@ -1,0 +1,6 @@
+.git
+.tools
+**/target
+frontend/node_modules
+frontend/dist
+reports

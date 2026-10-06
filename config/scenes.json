@@ -1,0 +1,77 @@
+[
+  {
+    "id": "box",
+    "label": "박스 안 슈팅",
+    "stats": [
+      "finishing"
+    ],
+    "effect": "goal"
+  },
+  {
+    "id": "long",
+    "label": "중거리 슈팅",
+    "stats": [
+      "shotPower"
+    ],
+    "effect": "goal"
+  },
+  {
+    "id": "oneOnOne",
+    "label": "골키퍼와 1대1",
+    "stats": [
+      "composure"
+    ],
+    "effect": "goal"
+  },
+  {
+    "id": "header",
+    "label": "크로스 헤더",
+    "stats": [
+      "heading"
+    ],
+    "effect": "goal"
+  },
+  {
+    "id": "setPiece",
+    "label": "세트피스 킥",
+    "stats": [
+      "kickPower"
+    ],
+    "effect": "goal"
+  },
+  {
+    "id": "run",
+    "label": "뒷공간 침투",
+    "stats": [
+      "offBall",
+      "speed"
+    ],
+    "effect": "extra"
+  },
+  {
+    "id": "dribble",
+    "label": "1대1 돌파",
+    "stats": [
+      "dribbling",
+      "firstTouch"
+    ],
+    "effect": "boost"
+  },
+  {
+    "id": "pass",
+    "label": "연계 패스",
+    "stats": [
+      "passing",
+      "teamwork"
+    ],
+    "effect": "assist"
+  },
+  {
+    "id": "press",
+    "label": "전방 압박",
+    "stats": [
+      "workRate"
+    ],
+    "effect": "press"
+  }
+]
