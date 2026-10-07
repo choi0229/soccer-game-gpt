@@ -7,10 +7,16 @@ import java.util.function.ToDoubleFunction;
 
 public final class Main {
     public static State run(Config c,String strategy,long seed,com.fasterxml.jackson.databind.JsonNode policy) {
-        Engine e=new Engine(c); State s=e.create(seed,null);
+        return run(c,strategy,seed,policy,null);
+    }
+    public static State run(Config c,String strategy,long seed,com.fasterxml.jackson.databind.JsonNode policy,EngineObserver observer) {
+        return run(c,strategy,seed,policy,observer,null);
+    }
+    static State run(Config c,String strategy,long seed,com.fasterxml.jackson.databind.JsonNode policy,EngineObserver observer,java.util.function.Consumer<State> snapshot) {
+        Engine e=new Engine(c,observer); State s=e.create(seed,null);
         Rng choices=new Rng(seed^Long.parseLong(policy.get("choiceStreamSalt").asText()));
         while(!s.completed) {
-            if(s.pendingEvent!=null) { e.apply(s,Action.event(choices.integer(0,c.event(s.pendingEvent).choices().size()-1))); continue; }
+            if(s.pendingEvent!=null) { Action a=Action.event(choices.integer(0,c.event(s.pendingEvent).choices().size()-1)); e.apply(s,a); trace(observer,s,a,choices.state); if(snapshot!=null) snapshot.accept(s); continue; }
             Map<String,String> changed=new LinkedHashMap<>();String sunday="rest";String menu;
             switch(strategy) {
                 case "random" -> {
@@ -25,21 +31,29 @@ public final class Main {
                     menu=cycle(policy.get("trainingMenus"),s.day);
                     for(String slot:List.of("morning","afternoon","night")) changed.put(slot,menu);
                 }
-                case "balanced" -> {
+                case "balanced", "balanced-calendar", "balanced-training-slot" -> {
                     boolean exercise=false;for(var day:policy.get("balancedExerciseDays")) if(day.asInt()==e.weekday(s)) exercise=true;
                     changed.put("dawn",exercise?"exercise":"sleep");changed.put("class",cycle(policy.get("balancedClasses"),s.day));
                     menu=c.menus.get(s.day%c.menus.size()).id();
                     for(String slot:List.of("morning","afternoon","night")) changed.put(slot,menu);
+                    if(strategy.equals("balanced-training-slot")) changed.putAll(BalancedTrainingSlots.plan(c,e,s));
                     sunday=cycle(policy.get("balancedSunday"),e.week(s)-1);
                 }
                 default -> throw new IllegalArgumentException("strategy");
             }
             if(e.injured(s)) changed.put("dawn","sleep");
+            if(observer!=null) for(String slot:List.of("morning","afternoon","night")) observer.policySelection(s.day,slot,changed.get(slot));
             // API and simulator both send only selections that changed.
             changed.entrySet().removeIf(x->x.getValue().equals(s.selections.get(x.getKey())));
-            e.apply(s,Action.day(changed,e.weekday(s)==6?sunday:null));
+            Action a=Action.day(changed,e.weekday(s)==6?sunday:null); e.apply(s,a); trace(observer,s,a,choices.state); if(snapshot!=null) snapshot.accept(s);
         }
+        if(observer!=null) observer.finished(s.rngState,choices.state);
         return s;
+    }
+    private static void trace(EngineObserver observer,State s,Action action,long choiceRngState) {
+        if(observer==null || !observer.traceActions()) return;
+        try { observer.actionBoundary(Config.JSON.writeValueAsString(action),Config.JSON.writeValueAsString(s),choiceRngState); }
+        catch(java.io.IOException ex) { throw new IllegalStateException(ex); }
     }
     private static String pick(Rng r,com.fasterxml.jackson.databind.JsonNode list) { return list.get(r.integer(0,list.size()-1)).asText(); }
     private static String cycle(com.fasterxml.jackson.databind.JsonNode list,int index) { return list.get(index%list.size()).asText(); }

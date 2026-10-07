@@ -1,0 +1,7 @@
+{
+  "rule": "focusAcademic",
+  "candidates": {"A": 1.50, "B": 1.00, "C": 0.75},
+  "strategies": ["random", "training", "balanced-training-slot"],
+  "baseSeed": 0,
+  "runsPerStrategy": 1000
+}

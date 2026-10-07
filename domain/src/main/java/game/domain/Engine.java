@@ -6,7 +6,17 @@ import static game.domain.State.*;
 /** Authoritative state machine shared by server, replay and headless simulation. */
 public final class Engine {
     public final Config c;
-    public Engine(Config config) { c=config; }
+    private final EngineObserver observer;
+    public Engine(Config config) { this(config,null); }
+    public Engine(Config config,EngineObserver observer) { c=config; this.observer=observer; }
+    private double primaryAverage(State s) { return c.stats.stream().filter(Config.Stat::primary).mapToDouble(x->s.stats.get(x.id())).average().orElseThrow(); }
+    private void observeTraining(State s,String slot,double before,double maximum,String outcome) {
+        if(observer!=null) observer.training(new EngineObserver.Training(s.day,week(s),vacation(s),slot,s.selections.get(slot),before,maximum,outcome));
+    }
+    private void academic(State s,double delta,String source) {
+        double before=s.academic; s.academic=clamp(s.academic+delta);
+        if(observer!=null) observer.academic(new EngineObserver.Change(s.day,week(s),source,before,delta,s.academic));
+    }
     public State create(long seed,String schoolId) {
         State s=new State(); s.seed=seed; s.configHash=c.fingerprint();
         s.schoolId=schoolId==null?c.schools.stream().filter(x->x.type().equals(c.s("defaultSchoolType"))).findFirst().orElseThrow().id():c.school(schoolId).id();
@@ -29,7 +39,9 @@ public final class Engine {
         s.cupAlive.addAll(c.schools.stream().map(Config.School::id).toList()); r.shuffle(s.cupAlive);
         buildLeague(s); s.rngState=r.state;
         s.weeklyStamina=new double[c.i("weeks")]; s.weeklyDays=new int[c.i("weeks")];
-        s.report.add("고1 파워형 공격수의 첫 시즌이 시작되었습니다."); return s;
+        s.report.add("고1 파워형 공격수의 첫 시즌이 시작되었습니다.");
+        if(observer!=null) observer.created(seed,s.academic,s.affinity.get("coach"));
+        return s;
     }
     private void buildLeague(State s) {
         for(int region:c.schools.stream().map(Config.School::region).distinct().toList()) {
@@ -107,7 +119,12 @@ public final class Engine {
                     case 1 -> { if(vacation(s)) training(s,r,"morning",true); else classroom(s,r); }
                     case 2 -> {
                         if(c.calendar.cupDays.contains(s.day)) {
-                            boolean playing=cupDay(s); playCupRound(s,r);
+                            boolean playing=cupDay(s);
+                            if(playing && observer!=null) {
+                                observeTraining(s,"afternoon",s.stamina,maxStamina(s),"match");
+                                observeTraining(s,"night",s.stamina,maxStamina(s),"match");
+                            }
+                            playCupRound(s,r);
                             if(playing) s.stage=4; else afternoon(s,r);
                         } else afternoon(s,r);
                     }
@@ -123,16 +140,18 @@ public final class Engine {
         } else { stamina(s,c.n("sleepRecovery")); s.report.add("더 자기 · 체력을 회복했습니다."); }
     }
     private void classroom(State s,Rng r) {
+        if(observer!=null) observer.classroom(s.selections.get("class"));
         switch(s.selections.get("class")) {
-            case "focus" -> { s.academic=clamp(s.academic+c.n("focusAcademic")*(c.n("schoolMultiplierBase")+s.affinity.get("school")/c.n("schoolMultiplierDivisor"))); stamina(s,-c.n("focusCost")); s.report.add("수업 집중 · 학업 성취가 올랐습니다."); }
-            case "nap" -> { stamina(s,c.n("napRecovery")); s.academic=clamp(s.academic+c.n("napAcademic")); s.report.add("수업 중 졸기 · 체력 회복, 학업 성취 감소"); }
-            case "teacher" -> { affinity(s,"school",c.n("talkAffinity")); s.academic=clamp(s.academic+c.n("talkAcademic")); s.report.add("선생님과 이야기했습니다."); if(r.chance(c.n("schoolEventChance"))) triggerEvent(s,r,"school"); }
+            case "focus" -> { academic(s,c.n("focusAcademic")*(c.n("schoolMultiplierBase")+s.affinity.get("school")/c.n("schoolMultiplierDivisor")),"classroom"); stamina(s,-c.n("focusCost")); s.report.add("수업 집중 · 학업 성취가 올랐습니다."); }
+            case "nap" -> { stamina(s,c.n("napRecovery")); academic(s,c.n("napAcademic"),"classroom"); s.report.add("수업 중 졸기 · 체력 회복, 학업 성취 감소"); }
+            case "teacher" -> { affinity(s,"school",c.n("talkAffinity")); academic(s,c.n("talkAcademic"),"classroom"); s.report.add("선생님과 이야기했습니다."); if(r.chance(c.n("schoolEventChance"))) triggerEvent(s,r,"school"); }
             case "friends" -> { affinity(s,"school",c.n("friendAffinity")); s.report.add("친구와 어울렸습니다."); if(r.chance(c.n("schoolEventChance"))) triggerEvent(s,r,"school"); }
         }
     }
     private void afternoon(State s,Rng r) {
         if(s.supplementRequired && c.calendar.supplementWeeks.contains(week(s))) {
-            s.academic=clamp(s.academic+c.n("supplementGrowth")); s.supplementDays++; s.report.add("오후 보충수업 · 학업 성취 +"+c.n("supplementGrowth"));
+            observeTraining(s,"afternoon",s.stamina,maxStamina(s),"supplement");
+            academic(s,c.n("supplementGrowth"),"supplement"); s.supplementDays++; s.report.add("오후 보충수업 · 학업 성취 +"+c.n("supplementGrowth"));
         } else training(s,r,"afternoon",true);
     }
     public double growth(State s,String id,double base,double menuMultiplier) {
@@ -141,20 +160,25 @@ public final class Engine {
         return base*menuMultiplier*(c.stat(id).primary()?c.n("powerGrowth"):1)*c.conditions.get(s.condition).training()*decay;
     }
     private void training(State s,Rng r,String slot,boolean team) {
-        if(injured(s)) { s.report.add(slotLabel(slot)+" 재활 · 성장 및 체력 소모 없음"); return; }
+        double before=s.stamina,maximum=observer==null?0:maxStamina(s);
+        if(injured(s)) { observeTraining(s,slot,before,maximum,"injury"); s.report.add(slotLabel(slot)+" 재활 · 성장 및 체력 소모 없음"); return; }
         if(s.excludedToday || s.stamina<c.n("excludeThreshold")) {
-            if(!s.excludedToday) { s.excludedToday=true; s.exclusions++; affinity(s,"coach",-c.n("excludeCoachCost")); }
-            s.report.add(slotLabel(slot)+" 훈련 제외 · 체력 부족"); return;
+            if(!s.excludedToday) { s.excludedToday=true; s.exclusions++; affinity(s,"coach",-c.n("excludeCoachCost"),"other"); }
+            observeTraining(s,slot,before,maximum,"excluded"); s.report.add(slotLabel(slot)+" 훈련 제외 · 체력 부족"); return;
         }
         var menu=c.menu(s.selections.get(slot));
         boolean injuryRoll=s.stamina<c.n("injuryThreshold");
+        if(injuryRoll && observer!=null) observer.injuryRoll();
         if(injuryRoll && r.chance(c.n("injuryChance"))) {
             int duration=r.integer(c.i("injuryMinWeeks"),c.i("injuryMaxWeeks"));
             s.injuryUntilDay=s.day+duration*c.i("daysPerWeek"); s.injuries++;
+            if(observer!=null) observer.injury(duration*c.i("daysPerWeek"));
+            observeTraining(s,slot,before,maximum,"injuryStarted");
             s.report.add(slotLabel(slot)+" 훈련 중 부상 · "+duration+"주 재활"); return;
         }
         for(String id:menu.stats()) stat(s,id,growth(s,id,c.n(team?"teamGrowth":"personalGrowth"),menu.growthMultiplier()));
         s.trainingCounts.merge(menu.id(),1,Integer::sum); stamina(s,-c.n(team?"teamCost":"personalCost"));
+        observeTraining(s,slot,before,maximum,"executed");
         s.report.add(slotLabel(slot)+" "+menu.label()+" 훈련 완료");
     }
     private String slotLabel(String slot) { return switch(slot) { case "morning"->"오전"; case "afternoon"->"오후"; default->"야간"; }; }
@@ -162,7 +186,7 @@ public final class Engine {
         switch(s.sundayAction) {
             case "rest" -> { stamina(s,c.n("restRecovery")); condition(s,c.i("restCondition")); s.report.add("일요일 휴식 · 체력과 컨디션 회복"); }
             case "job" -> { s.money+=c.n("jobMoney"); stamina(s,-c.n("jobCost")); s.report.add("아르바이트 · "+(int)c.n("jobMoney")+"원"); }
-            default -> { affinity(s,s.sundayAction,c.n("meetAffinity")); s.report.add("사람 만나기 · 관계도 상승"); triggerEvent(s,r,s.sundayAction); }
+            default -> { affinity(s,s.sundayAction,c.n("meetAffinity"),"sundayMeet"); s.report.add("사람 만나기 · 관계도 상승"); triggerEvent(s,r,s.sundayAction); }
         }
     }
     private void finishDay(State s) {
@@ -175,6 +199,9 @@ public final class Engine {
             else s.winterSupplementRequired=failed;
             s.report.add("학기 성적 확인 · "+(failed?"보충수업 대상":"기준 통과"));
         }
+        if(observer!=null) observer.day(new EngineObserver.Day(s.day,week(s),injured(s),s.academic,
+            weekday(s)==6 && c.calendar.academicReviewWeeks.contains(week(s)),s.academic<c.n("academicThreshold"),
+            primaryAverage(s),averageStats(s),s.affinity.get("coach")));
         int w=week(s)-1; s.weeklyStamina[w]+=s.stamina; s.weeklyDays[w]++;
         s.day++; s.activeDay=false; s.stage=0; s.completed=s.day>=c.totalDays();
         if(injured(s) && "exercise".equals(s.selections.get("dawn"))) s.selections.put("dawn","sleep");
@@ -182,7 +209,11 @@ public final class Engine {
     }
     public void stat(State s,String id,double delta) { s.stats.put(id,clamp(s.stats.get(id)+delta)); s.stamina=Math.min(s.stamina,maxStamina(s)); }
     public void stamina(State s,double delta) { s.stamina=Math.max(0,Math.min(maxStamina(s),s.stamina+delta)); }
-    public void affinity(State s,String axis,double delta) { s.affinity.put(axis,clamp(s.affinity.get(axis)+delta)); }
+    public void affinity(State s,String axis,double delta) { affinity(s,axis,delta,"other"); }
+    private void affinity(State s,String axis,double delta,String source) {
+        double before=s.affinity.get(axis); s.affinity.put(axis,clamp(s.affinity.get(axis)+delta));
+        if(observer!=null && axis.equals("coach")) observer.coach(new EngineObserver.Change(s.day,week(s),source,before,delta,s.affinity.get(axis)));
+    }
     public void condition(State s,int delta) { s.condition=Math.max(0,Math.min(c.conditions.size()-1,s.condition+delta)); }
     private double clamp(double value) { return Math.max(c.n("statMin"),Math.min(c.n("statMax"),value)); }
     public int poisson(Rng r,double lambda) {
@@ -221,12 +252,20 @@ public final class Engine {
         m.homeGoals=poisson(r,expectedGoals(c.school(home).power(),c.school(away).power()));
         m.awayGoals=poisson(r,expectedGoals(c.school(away).power(),c.school(home).power()));
         boolean player=home.equals(s.schoolId)||away.equals(s.schoolId), atHome=home.equals(s.schoolId);
+        int baseHome=m.homeGoals,baseAway=m.awayGoals;
         if(player) {
             m.role=role(s); s.lastMatchRole=m.role;
+            if(observer!=null) {
+                double score=s.affinity.get("coach")*c.n("startCoachWeight")+averageStats(s)*c.n("startStatWeight");
+                double power=c.school(s.schoolId).power();
+                observer.appearance(new EngineObserver.Appearance(s.day,week(s),competition,s.affinity.get("coach"),averageStats(s),primaryAverage(s),score,
+                    score-(power-c.n("starterOffset")),score-(power-c.n("subOffset")),m.role));
+            }
             int count=switch(m.role) {
                 case "starter"->r.integer(c.i("starterScenesMin"),c.i("starterScenesMax"));
                 case "sub"->r.integer(c.i("subScenesMin"),c.i("subScenesMax")); default->0;
             };
+            if(observer!=null) observer.baseScenes(m.role,count);
             if(!m.role.equals("bench")) {
                 String opponent=atHome?away:home;
                 var queue=new ArrayList<Config.Scene>(); var minutes=new ArrayList<Integer>();
@@ -237,13 +276,18 @@ public final class Engine {
                     int own=atHome?m.homeGoals:m.awayGoals,other=atHome?m.awayGoals:m.homeGoals;
                     boolean goalScene=scene.effect().equals("goal");
                     double chance=successChance(s,scene,opponent,minute,own,other,previous,goalScene&&boosted?c.n("dribbleBonus"):0);
+                    double observedBoost=goalScene&&boosted?c.n("dribbleBonus"):0;
+                    double observedAbility=observer==null?0:scene.stats().stream().mapToDouble(x->s.stats.get(x)).average().orElseThrow();
+                    double observedPassive=observer==null?0:passiveBonus(s,opponent,minute,own,other,previous);
                     if(goalScene) boosted=false;
                     boolean success=r.chance(chance/100); String outcome="실패";
+                    if(observer!=null) observer.scene(new EngineObserver.Scene(m.role,scene.id(),goalScene,success,chance,observedAbility,
+                        c.school(opponent).power(),c.conditions.get(s.condition).match(),observedPassive,observedBoost));
                     if(success) {
                         switch(scene.effect()) {
                             case "goal" -> { m.goals++; addGoal(m,atHome); rating+=c.n("ratingGoal"); outcome="골!"; }
                             case "assist" -> { m.assists++; addGoal(m,atHome); rating+=c.n("ratingAssist"); outcome="도움!"; }
-                            case "extra" -> { queue.add(i+1,c.scene("oneOnOne")); minutes.add(i+1,Math.min(c.i("matchMinutes"),minute+1)); rating+=c.n("ratingSuccess"); outcome="침투 성공 · 1대1 장면 추가"; }
+                            case "extra" -> { if(observer!=null) observer.addedScene(); queue.add(i+1,c.scene("oneOnOne")); minutes.add(i+1,Math.min(c.i("matchMinutes"),minute+1)); rating+=c.n("ratingSuccess"); outcome="침투 성공 · 1대1 장면 추가"; }
                             case "boost" -> { boosted=true; rating+=c.n("ratingSuccess"); outcome="돌파 성공 · 다음 슈팅 +"+c.i("dribbleBonus"); }
                             case "press" -> { boolean scored=r.chance(c.n("pressGoalChance")); if(scored) addGoal(m,atHome); rating+=c.n("ratingSuccess"); outcome=scored?"압박 성공 · 팀 득점!":"압박 성공"; }
                             default -> throw new IllegalStateException("장면 효과 오류");
@@ -255,8 +299,8 @@ public final class Engine {
                 stamina(s,-c.n(m.role.equals("starter")?"starterCost":"subCost"));
                 List<String> growth=List.of("momentum","clutch","mental",s.defenders.get(opponent));
                 stat(s,growth.get(r.integer(0,growth.size()-1)),c.n("passiveGrowth"));
-                if(m.rating>=c.n("goodRating")) affinity(s,"coach",c.n("ratingCoachGain"));
-                else if(m.rating<c.n("badRating")) affinity(s,"coach",c.n("ratingCoachLoss"));
+                if(m.rating>=c.n("goodRating")) affinity(s,"coach",c.n("ratingCoachGain"),"rating");
+                else if(m.rating<c.n("badRating")) affinity(s,"coach",c.n("ratingCoachLoss"),"rating");
                 double reward=m.rating>=c.n("greatRating")?c.n("reputationGreat"):m.rating>=c.n("goodRating")?c.n("reputationGood"):0;
                 s.reputation+=(reward+m.goals*c.n("reputationGoal")+m.assists*c.n("reputationAssist"))*c.n("reputationYearMultiplier");
             }
@@ -264,7 +308,14 @@ public final class Engine {
         if(m.homeGoals!=m.awayGoals) m.winner=m.homeGoals>m.awayGoals?home:away;
         else if(knockout) { boolean won=r.chance(c.n("penaltyChance")); m.penaltiesHome=won?1:0; m.penaltiesAway=won?0:1; m.winner=won?home:away; }
         if(player) { s.matches.add(m); s.todayMatches.add(m); s.report.add(competition+" · "+c.school(home).name()+" "+m.homeGoals+" : "+m.awayGoals+" "+c.school(away).name()+(knockout&&m.homeGoals==m.awayGoals?" (승부차기)":"")); }
-        s.competitionMatches.add(m); return m;
+        s.competitionMatches.add(m);
+        if(player && observer!=null) {
+            int base=atHome?baseHome:baseAway,opponentBase=atHome?baseAway:baseHome;
+            int finalGoals=atHome?m.homeGoals:m.awayGoals,opponentFinal=atHome?m.awayGoals:m.homeGoals;
+            observer.score(new EngineObserver.Score(competition,m.role,base,m.goals,m.assists,finalGoals-base-m.goals-m.assists,
+                finalGoals,opponentBase,opponentFinal,m.rating));
+        }
+        return m;
     }
     private void addGoal(Match m,boolean atHome) { if(atHome) m.homeGoals++; else m.awayGoals++; }
     private void playLeagueRound(State s,Rng r) {
@@ -349,9 +400,9 @@ public final class Engine {
             double delta=((Number)value).doubleValue();
             switch(key) {
                 case "stamina"->stamina(s,delta);case "condition"->condition(s,(int)delta);
-                case "academic"->s.academic=clamp(s.academic+delta);case "money"->s.money=Math.max(0,s.money+delta);
+                case "academic"->academic(s,delta,"event");case "money"->s.money=Math.max(0,s.money+delta);
                 case "reputation"->s.reputation=Math.max(0,s.reputation+delta);
-                case "coachAffinity","teammateAffinity","familyAffinity","schoolAffinity"->affinity(s,key.replace("Affinity",""),delta);
+                case "coachAffinity","teammateAffinity","familyAffinity","schoolAffinity"->affinity(s,key.replace("Affinity",""),delta,"event");
                 default->throw new IllegalArgumentException("알 수 없는 이벤트 효과: "+key);
             }
         }

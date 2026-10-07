@@ -1,0 +1,7 @@
+{
+  "parameter": "eventAcademicMultiplier",
+  "candidates": {"A": 1.0, "B": 0.5, "C": 0.0},
+  "strategies": ["random", "training", "balanced-training-slot"],
+  "baseSeed": 0,
+  "runsPerStrategy": 1000
+}
